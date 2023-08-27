@@ -2,7 +2,7 @@
 * YouTubeFocus is engineered to revamp and declutter YouTube's notoriously attention-craving interface.
 
 * The extension transitions YouTube's vibvrant visiuals into calming grayscale, minimizing clickbait distractions and helping you stay on track.
-* Additional Functionality include seamlessly removing the comments section.
+* Additional functionality include optionally removing the comments section.
 * Finally, the option to disable entirely "YouTube Shorts". 
 
 # Resources: 

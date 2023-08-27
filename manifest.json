@@ -1,0 +1,32 @@
+{
+  "manifest_version": 2,
+  "name": "YouTube Focus",
+  "version": "1.0",
+  "icons": {
+      "16": "/media/icon16.png",
+      "32": "/media/icon32.png",
+      "48": "/media/icon48.png",
+      "128": "/media/icon128.png"
+  },
+  "description": "A Google Chrome extension that makes everything on YouTube black and white except the video",
+  "permissions": [
+      "activeTab",
+      "tabs",
+      "storage",
+      "https://www.youtube.com/*"
+  ],
+  "browser_action": {
+      "default_popup": "popup.html",
+      "default_icon": {
+          "16": "/media/icon16.png"
+      }
+  },
+  "background": {
+      "scripts": ["background.js"],
+      "persistent": false
+  },
+  "content_scripts": [{
+      "matches": ["https://www.youtube.com/*"],
+      "js": ["content.js"]
+  }]
+}

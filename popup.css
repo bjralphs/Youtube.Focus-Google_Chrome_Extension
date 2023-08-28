@@ -3,20 +3,25 @@ body {
   padding: 15px;
   width: 250px;
   background-color: darkgray;
-
-   
-  
 }
 
+footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+}
 
 header {
   display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 50px;
+  justify-content: center;
+  align-items: center;
+  height: 50px;
 }
 
-body.groove {border-style: groove;}
+body.groove {
+  border-style: groove;
+}
 
 a {
   color: black;
@@ -25,7 +30,7 @@ a {
   font-weight: 500;
 }
 
-label {
+.left-text {
   font-size: medium;
 }
 
@@ -40,6 +45,7 @@ label {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  text-align: right;
 }
 
 #bottom {
@@ -49,4 +55,60 @@ label {
 #status {
   color: green;
   margin-top: 10px;
+}
+
+/* The switch container */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 30px; /* 50% of 60px */
+  height: 17px; /* 50% of 34px */
+}
+
+/* The slider */
+.slider {
+  justify-content: right;
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: 0.4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 13px; /* 50% of 26px */
+  width: 13px; /* 50% of 26px */
+  left: 2px; /* Adjusted for the reduced size */
+  bottom: 2px; /* Adjusted for the reduced size */
+  background-color: white;
+  transition: 0.4s;
+}
+
+input:checked + .slider {
+  background-color: #2196f3;
+}
+
+input:checked + .slider:before {
+  transform: translateX(13px); /* 50% of 26px */
+}
+
+.slider.round {
+  border-radius: 17px; /* 50% of 34px */
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+
+/* Align the switch to the right */
+.switch-container {
+  display: flex;
+  justify-content: space-between; /* This will push content to both ends of the container */
+  align-items: center;
+  margin: 10px;
 }

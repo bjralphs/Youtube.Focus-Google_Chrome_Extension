@@ -1,35 +1,46 @@
-// Load the saved state of the extension
-chrome.storage.sync.get('commentsEnabled', function(data) {
-    // Check if the current URL contains 'https://www.youtube.com/shorts/'
-    if (window.location.href.includes('https://www.youtube.com/shorts/')) {
-        // If it does, send a message to the background script to redirect
-        chrome.runtime.sendMessage({redirect: 'https://www.youtube.com/'});
-    } else if (!data.commentsEnabled) { // If comments are disabled
-        // Create a new stylesheet
-        var style = document.createElement('style');
-        style.type = 'text/css';
+// Apply styles based on stored states.
+const applyStyles = () => {
+  // Remove the old style tag if it exists
+  const oldStyle = document.getElementById('customStyles');
+  if (oldStyle) oldStyle.remove();
 
-        // Define the CSS rules to make everything black and white except for the video player and to hide the comments
-        var css = `html, body, * :not(#player) { filter: grayscale(100%); }
-                   #player, #player * { filter: none; }
-                   html, body, * :not(#player):hover { filter: none; }
-                   #comments { display: none; } 
-                   `;
-
-        // Set the CSS rules as the content of the stylesheet
-        style.appendChild(document.createTextNode(css));
-
-        // Append the stylesheet to the document
-        document.head.appendChild(style);
+  chrome.storage.sync.get(['grayscaleEnabled', 'commentsDisabled'], data => {
+    let css = "";  // Initialize css as an empty string.
+  
+    // Grayscale
+    if (data.grayscaleEnabled) {
+        css += `
+            html, body, * { filter: grayscale(100%) !important; }
+            #chips {visibility: hidden;}
+        `;
+    } else {
+        css += `html, body, * {filter: none !important;}`
     }
-});
 
-// Listen for messages
+    // Comments Disabling
+    if (data.commentsDisabled) {
+        css += `#comments { display: none !important; }`;
+    }
+
+    const style = document.createElement('style');
+    style.type = 'text/css';
+    style.id = 'customStyles';  
+    style.appendChild(document.createTextNode(css));
+    document.body.appendChild(style);
+    chrome.runtime.reload();
+  });
+}
+
+
+// Listen for messages.
 chrome.runtime.onMessage.addListener(
-  function(request, sender, sendResponse) {
-    if (request.refresh) {
-      // Refresh the page
-      location.reload();
-    }
+  function(request, sender, sendResponse){
+      if (request.command === "applyStyles") {
+          applyStyles();
+      }
   }
 );
+
+document.addEventListener('DOMContentLoaded', applyStyles);
+
+

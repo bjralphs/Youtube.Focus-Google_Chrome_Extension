@@ -1,21 +1,39 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <link rel="stylesheet" href="popup.css">
-    </head>
-    <body>
-        
-        <div class="header">
-            <h1>Toggle</h1>
-            
-			<label class="switch">
-			  <input type="checkbox" id="toggleCheckbox">
-			  <span class="slider round"></span>
-			</label>
-			<div id="status"></div>
-        </div>
-        
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Extension Popup</title>
+    <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+    <header>
+        <a href="https://github.com/bjralphs/Youtube.Focus-Google_Chrome_Extension" target="_blank">
+            YouTubeFocus <img src="media/icon128.png" alt="Github Icon" id="github-icon">
+        </a>
+    </header>
+    <hr>
 
-        <script src="popup.js"></script>
-    </body>
+    <div class="toggle-section">
+        <label>Grayscale</label>
+        <input type="checkbox" id="grayscale-toggle">
+    </div>
+    <div class="toggle-section">
+        <label>Shorts Disabling</label>
+        <input type="checkbox" id="shorts-toggle">
+    </div>
+    <div class="toggle-section">
+        <label>Comments Disabling</label>
+        <input type="checkbox" id="comments-toggle">
+    </div>
+    <!--Troubleshooting
+    <div class="reset-section">
+        <button id="reset-button">Reset to Default</button>
+    </div>
+    -->
+    <div id="status"></div>
+    <hr id="bottom">
+    
+    <script src="popup.js" defer></script>
+</body>
 </html>

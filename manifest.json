@@ -8,7 +8,7 @@
       "48": "/media/icon48.png",
       "128": "/media/icon128.png"
   },
-  "description": "A Google Chrome extension that makes everything on YouTube black and white except the video",
+  "description": "A Google Chrome extension for YouTube, designed to declutter and minimize distraction",
   "permissions": [
       "webNavigation",
       "activeTab",

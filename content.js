@@ -4,7 +4,7 @@ const applyStyles = () => {
   const oldStyle = document.getElementById("customStyles");
   if (oldStyle) oldStyle.remove();
 
-  chrome.storage.sync.get(["grayscaleEnabled", "commentsDisabled"], (data) => {
+  chrome.storage.sync.get(["grayscaleEnabled", "commentsDisabled", "relatedDisabled"], (data) => {
     let css = ""; // Initialize css as an empty string.
 
     // Grayscale
@@ -16,18 +16,24 @@ const applyStyles = () => {
     } else {
       css += `html, body, * {filter: none !important;}`;
     }
+    // Related Disabling
+    if (data.relatedDisabled) {
+      css += `#related { display: none !important; }`;
+    }   
 
     // Comments Disabling
     if (data.commentsDisabled) {
       css += `#comments { display: none !important; }`;
     }
+    
+    
 
     const style = document.createElement("style");
     style.type = "text/css";
     style.id = "customStyles";
     style.appendChild(document.createTextNode(css));
     document.body.appendChild(style);
-    chrome.runtime.reload();
+    
   });
 };
 

@@ -8,7 +8,10 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
   } else if (request.command === "toggleShorts") {
     toggleShorts();
     console.log("Background- Shorts Toggled");
-  } else if (request.redirect === "https://www.youtube.com/") {
+  }else if (request.command === "toggleRelated") {
+      toggleRelated();
+      console.log("Background- Related Toggled");
+    } else if (request.redirect === "https://www.youtube.com/") {
     chrome.tabs.update(sender.tab.id, { url: request.redirect });
   }
 });
@@ -53,6 +56,26 @@ function toggleShorts() {
   });
 }
 
+function toggleRelated() {
+  // Fetch the current state of comments from storage
+  chrome.storage.sync.get("relatedDisabled", function (data) {
+    let currentState = data.relatedDisabled;
+    // Toggle the state
+    let newState = !currentState;
+    chrome.storage.sync.set({ relatedDisabled: newState }, function () {
+      // Fetch the current active tab to get its tabId
+      chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+        var currentTab = tabs[0];
+        if (currentTab && currentTab.id) {
+          // Notify the content script in the current active tab to apply the changes
+          chrome.tabs.sendMessage(currentTab.id, { command: "applyStyles" });
+        }
+      });
+    });
+  });
+}
+
+
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   if (
     changeInfo.url &&
@@ -77,6 +100,7 @@ chrome.runtime.onInstalled.addListener(function () {
       shortsRedirectEnabled: true, // Enable YouTube shorts redirect by default
       grayscaleEnabled: true, // Enable grayscale by default
       commentsDisabled: true, // Disable comments by default
+      relatedDisabled: true // Disable related content by default
     },
     function () {
       if (chrome.runtime.lastError) {

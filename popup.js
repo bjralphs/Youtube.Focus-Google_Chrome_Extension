@@ -1,7 +1,7 @@
 // When the popup is loaded, retrieve the saved states from chrome.storage.sync
 document.addEventListener("DOMContentLoaded", function () {
   chrome.storage.sync.get(
-    ["grayscaleEnabled", "commentsDisabled", "shortsRedirectEnabled"],
+    ["grayscaleEnabled", "commentsDisabled", "shortsRedirectEnabled", "relatedDisabled"],
     function (data) {
       document.getElementById("grayscale-toggle").checked =
         data.grayscaleEnabled;
@@ -9,6 +9,8 @@ document.addEventListener("DOMContentLoaded", function () {
         data.commentsDisabled;
       document.getElementById("shorts-toggle").checked =
         data.shortsRedirectEnabled;
+      document.getElementById("related-toggle").checked =
+        data.relatedDisabled;
     }
   );
 });
@@ -30,7 +32,7 @@ document
           : "Grayscale disabled.";
         setTimeout(function () {
           status.textContent = "";
-        }, 2000);
+        }, 3000);
 
         // Send a message to the content script to refresh or take necessary action
         chrome.tabs.query(
@@ -59,7 +61,7 @@ document
           : "Comments Enabled.";
         setTimeout(function () {
           status.textContent = "";
-        }, 2000);
+        }, 3000);
 
         chrome.tabs.query(
           { active: true, currentWindow: true },
@@ -83,11 +85,11 @@ document
       function () {
         var status = document.getElementById("status");
         status.textContent = e.target.checked
-          ? "Shorts redirect enabled."
-          : "Shorts redirect disabled.";
+          ? "Youtube-Shorts Disabled."
+          : "Youtube-Shorts Enabled.";
         setTimeout(function () {
           status.textContent = "";
-        }, 2000);
+        }, 3000);
 
         chrome.tabs.query(
           { active: true, currentWindow: true },
@@ -99,6 +101,34 @@ document
     );
   });
 
+ // Related Disabling Toggle
+document
+.getElementById("related-toggle")
+.addEventListener("change", function (e) {
+  chrome.runtime.sendMessage({ command: "toggleRelated" });
+
+  // Save the state of comments to chrome.storage.sync
+  chrome.storage.sync.set(
+    { relatedDisabled: !e.target.checked },
+    function () {
+      var status = document.getElementById("status");
+      status.textContent = e.target.checked
+        ? "Related Content Disabled."
+        : "Related Content Enabled.";
+      setTimeout(function () {
+        status.textContent = "";
+      }, 3000);
+
+      chrome.tabs.query(
+        { active: true, currentWindow: true },
+        function (tabs) {
+          chrome.tabs.sendMessage(tabs[0].id, { refresh: true });
+        }
+      );
+    }
+  );
+});
+
 //Troubleshooting Reset Button
 document.getElementById("reset-button").addEventListener("click", function () {
   // Reset values in chrome.storage.sync
@@ -107,18 +137,20 @@ document.getElementById("reset-button").addEventListener("click", function () {
       grayscaleEnabled: true, // Default enabled
       commentsDisabled: true, // Default enabled
       shortsRedirectEnabled: true, // Default enabled
+      relatedDisabled: true // Default enabled
     },
     function () {
       // Update UI to reflect this change
       document.getElementById("grayscale-toggle").checked = true;
       document.getElementById("comments-toggle").checked = true;
       document.getElementById("shorts-toggle").checked = true;
+      document.getElementById("related-toggle").checked = true;
 
       var status = document.getElementById("status");
       status.textContent = "Extension Variables Reset.";
       setTimeout(function () {
         status.textContent = "";
-      }, 2000);
+      }, 3000);
 
       // Optionally: Notify the content script to apply these changes immediately
       chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
